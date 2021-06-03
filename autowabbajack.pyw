@@ -59,7 +59,7 @@ def manual_download():
 	   step = STEP_ADDITIONAL_DOWNLOAD
 
 def additional_download():
-	global step
+	global step, total_stuck
 	additionalbuttonloc = pyautogui.locateOnScreen(ADDITIONAL_DOWNLOAD_IMG, confidence = conf)
 	print('Locating additional download button...')
 	if additionalbuttonloc != None:
@@ -67,13 +67,14 @@ def additional_download():
 		additionalbuttonloc = pyautogui.center(additionalbuttonloc)
 		pyautogui.click(additionalbuttonloc.x, additionalbuttonloc.y)
 		step = STEP_SLOW_DOWNLOAD
+		total_stuck = 0
 		return
 	if additionalbuttonloc == None:
 		print('Could not locate additional download button.')
 	step = STEP_SLOW_DOWNLOAD
 
 def slow_download():
-	global step, download_count, stuck_in_step
+	global step, download_count, stuck_in_step, total_stuck
 	slowbuttonloc = pyautogui.locateOnScreen(SLOW_DOWNLOAD_IMG, confidence = conf)
 	print('Locating slow download button...')
 	if slowbuttonloc != None:
@@ -82,6 +83,7 @@ def slow_download():
 		pyautogui.click(slowbuttonloc.x, slowbuttonloc.y)
 		time.sleep(6)
 		step = STEP_MANUAL_DOWNLOAD
+		total_stuck = 0
 		return
 	if slowbuttonloc == None:
 		print('Could not locate slow button.')
@@ -94,6 +96,7 @@ def slow_download():
 			print("[" + str(download_count) + "] Attempted Mod Downloads")
 			download_count += 1
 			step = STEP_ADDITIONAL_DOWNLOAD
+			total_stuck = 0
 			return
 
 		# check if the additional button is still there
@@ -103,6 +106,7 @@ def slow_download():
 			additionalbuttonloc = pyautogui.center(additionalbuttonloc)
 			pyautogui.click(additionalbuttonloc.x, additionalbuttonloc.y)
 			step = STEP_SLOW_DOWNLOAD
+			total_stuck = 0
 			return	
 	stuck_in_step[0] = 0
 	stuck_in_step[1] = 0  
